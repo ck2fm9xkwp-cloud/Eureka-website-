@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-13T05:26:21.124093+00:00",
+  "generated_at": "2026-11-13T05:28:05.697936+00:00",
   "evidence_as_of": "2026-11-13T05:23:09.535979+00:00",
   "papers_in_vault": 71,
   "recorded_runs": 2,
@@ -7,6 +7,6 @@
   "partial_runs": 0,
   "failed_runs": 0,
   "data_available": true,
-  "automation_status": "Successful cloud research runs verified",
+  "automation_status": "Successful research runs recorded",
   "deployment_status": "Separate static website"
 }
