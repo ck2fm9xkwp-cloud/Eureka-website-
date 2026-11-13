@@ -21,8 +21,8 @@ async function loadProgress(){
   document.getElementById('update-body').textContent='The Dennis Initiative has collected '+data.papers_in_vault.toLocaleString()+' publication records across '+data.complete_runs.toLocaleString()+' completed research scans. These records provide a foundation for investigating scientific questions.';
  }catch{
   document.getElementById('automation-status').textContent='Update unavailable';
-  for(const id of ['papers','runs','complete'])document.getElementById(id).textContent='—';
-  document.getElementById('data-status').textContent='Research statistics are temporarily unavailable.';
+  // Preserve already verified visible counts during a transient refresh failure.
+  document.getElementById('data-status').textContent='A fresh statistics check is temporarily unavailable. Any counts already displayed are from the last successful check.';
   document.getElementById('update-title').textContent='The search begins.';
   document.getElementById('update-body').textContent='Follow The Dennis Initiative as we build our scientific evidence collection.';
  }finally{loadingProgress=false;}
@@ -30,3 +30,14 @@ async function loadProgress(){
 loadProgress();
 setInterval(()=>{if(!document.hidden)loadProgress();},60000);
 document.addEventListener('visibilitychange',()=>{if(!document.hidden)loadProgress();});
+
+// Optional founder-approved wording. Only fixed text nodes can change; statistics stay separately validated.
+async function loadApprovedWording(){
+ try{
+  const r=await fetch('content.json?updated='+Date.now(),{cache:'no-store'});if(!r.ok)return;
+  const data=await r.json();if(data.schema_version!==1||!data.content||typeof data.content!=='object')return;
+  const fields={intro:['.intro',1400],mission_title:['#mission h3',160],mission_story:['#mission .mission-grid > div > p',1400],support:['#support > div > p:not(.eyebrow)',1200],memorial:['#dennis blockquote',1600],roadmap:['#journey .timeline article:last-child p',1200]};
+  for(const [key,[selector,max]] of Object.entries(fields)){const value=data.content[key];if(typeof value==='string'&&value.length>=5&&value.length<=max&&!/[<>\x00-\x08]/.test(value)){const target=document.querySelector(selector);if(target)target.textContent=value;}}
+ }catch{ /* Keep the published design and wording available on refresh failure. */ }
+}
+loadApprovedWording();
